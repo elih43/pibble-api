@@ -1,5 +1,6 @@
 import random
 from pathlib import Path
+from webbrowser import get
 
 from fastapi import FastAPI, HTTPException
 from fastapi.responses import FileResponse
@@ -26,7 +27,12 @@ def list_images():
             {"id": i, "filename": img.name} for i, img in enumerate(images)
         ],
     }
-
+@app.get("/pibble/good")
+def pibble_good():
+    images = get_all_images()
+    for image in images:
+        if "thumbs" in image.stem.lower():
+            return FileResponse(image, media_type=f"image/{image.suffix.lstrip('.').replace('jpg', 'jpeg')}")
 
 @app.get("/pibble/random")
 def random_image():
